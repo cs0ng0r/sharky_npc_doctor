@@ -1,49 +1,6 @@
-<h1 align='center'>[ESX] Sharky Mentonpc</a></h1><p align='center'><b><a href='https://discord.esx-framework.org/'>Discord</a> - <a href='https://documentation.esx-framework.org/legacy/installation'>Documentation</a></b></h5>
+<h1 align='center'>[ESX] Sharky NPC Doctor</a></h1>
 
-This resource for ESX adds possibility for different jobs to send bills to players, for example making police units able to give people fines. It comes with a menu for paying bills, to open the menu the default keybind is `F7`.
-
-There is a developer server event available in order to register bills in the database, see default resources for examples.
-
-## Download & Installation
-
-### Using [fvm](https://github.com/qlaffont/fvm-installer)
-```
-fvm install --save --folder=esx esx-framework/esx_billing
-```
-
-### Using Git
-```
-cd resources
-git clone https://github.com/esx-framework/esx_billing [esx]/esx_billing
-```
-
-### Manually
-- Download https://github.com/esx-framework/esx_billing/archive/master.zip
-- Put it in the `[esx]` directory
-
-
-## Installation
-- Import `esx_billing.sql` in your database
-- Add this to your `server.cfg`:
-
-```
-start esx_billing
-```
-
-## Usage
-Press `[F7]` To show the billing menu
-
-```lua
-local amount = 100
-local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
-
-if closestPlayer == -1 or closestDistance > 3.0 then
-	ESX.ShowNotification('There\'s no players nearby!')
-else
-	TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(closestPlayer), 'society_taxi', 'Taxi', amount)
-end
-```
-
+This resource adds the ability for players to heal, or even revive, themselves in case there are no available EMS players
 # Legal
 ### License
 sharky_mentonpc - npc Doctor Script for ESX
