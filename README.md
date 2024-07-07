@@ -1,6 +1,6 @@
-<h1 align='center'>[ESX] Sharky Mentonpc</a></h1>
+<h1 align='center'>[ESX] Sharky NPC Doctor</a></h1>
 
-This resource for ESX adds possibility for different jobs to send bills to players, for example making police units able t
+This resource adds the ability for players to heal, or even revive, themselves in case there are no available EMS players
 # Legal
 ### License
 sharky_mentonpc - npc Doctor Script for ESX
