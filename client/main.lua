@@ -4,6 +4,15 @@ local canUse    = true
 
 local Explosion = { GetHashKey("weapon_explosion"), GetHashKey("WEAPON_PETROL_PUMP"), GetHashKey("WEAPON_PETROLCAN"),  GetHashKey("weapon_heli_crash") }
 
+function checkExplosion()
+    for k, v in pairs(Explosion) do
+        if GetPedCauseOfDeath(PlayerPedId()) == v then
+            return true
+        end
+    end
+    return false
+end
+
 Citizen.CreateThread(function()
     local pedModel = Config.PedSettings.PedModel
     RequestModel(pedModel)
@@ -30,15 +39,6 @@ Citizen.CreateThread(function()
             end)
         end
     end)
-
-    function checkExplosion()
-        for k, v in pairs(Explosion) do
-            if GetPedCauseOfDeath(PlayerPedId()) == v then
-                return true
-            end
-        end
-        return false
-    end
 
     while true do
         Wait(5)
@@ -70,7 +70,7 @@ Citizen.CreateThread(function()
                 end
             else
                 if not canUse then
-                    DrawText3D(coords + vec3(0, 0, 1), "~r~Ügyeletes \n Bocsi, jelenleg van elérhetö kollégám!")
+                    DrawText3D(coords + vec3(0, 0, 1), "~r~Ügyeletes \n ~s~Bocsi, jelenleg van elérhetö kollégám!")
                 elseif playerHealth > 0 then
                     DrawText3D(coords + vec3(0, 0, 1), "~r~Ügyeletes \n ~s~Nyomd meg az ~g~E~w~ gombot az ellátás igényléséhez! ~g~10.000$")
                 elseif playerHealth == 0 then
