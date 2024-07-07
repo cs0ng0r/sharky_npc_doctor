@@ -95,3 +95,15 @@ function DrawText3D(coords, text)
     EndTextCommandDisplayText(0, 0)
     ClearDrawOrigin()
 end
+
+
+
+AddEventHandler('onResourceStop', function(resource)
+    if resource == GetCurrentResourceName() then
+        local pedModel = Config.PedSettings.PedModel
+        local ped = GetHashKey(pedModel)
+        if DoesEntityExist(ped) then
+            DeleteEntity(ped)
+        end
+    end
+end)
