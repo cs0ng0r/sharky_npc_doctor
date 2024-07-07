@@ -10,16 +10,18 @@ ESX.RegisterServerCallback('sharky_mentonpc:getOnlineAmbulance', function(source
         end
     end
     cb(onlineAmbulance)
-    print(onlineAmbulance)
 end)
 
 ESX.RegisterServerCallback('sharky_mentonpc:removeMoney', function(source, cb, price)
     local xPlayer = ESX.GetPlayerFromId(source)
-    if not xPlayer or source == nil or source == 0 then
+    if not xPlayer then
         return
     end
     if xPlayer.getMoney() >= price then
         xPlayer.removeMoney(price)
+        cb()
+    elseif xPlayer.getAccount('bank').money >= price then
+        xPlayer.removeAccountMoney('bank', price)
         cb()
     else
         xPlayer.showNotification('Nincs elég pénzed!')

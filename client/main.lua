@@ -1,79 +1,97 @@
-local ESX    = exports.es_extended:getSharedObject()
+local ESX       = exports.es_extended:getSharedObject()
 
-local canUse = false
+local canUse    = true
 
-CreateThread(function()
-    while true do
-        Wait(Sharky.Options.CheckInterval * 1000)
-        ESX.TriggerServerCallback('sharky_mentonpc:getOnlineAmbulance', function(onlineAmbulance)
-            if onlineAmbulance > 0 then
-                canUse = false
-            else
-                canUse = true
-            end
-        end)
-    end
-end)
+local Explosion = { GetHashKey("weapon_explosion"), GetHashKey("WEAPON_PETROL_PUMP"), GetHashKey("WEAPON_PETROLCAN"),  GetHashKey("weapon_heli_crash") }
 
-CreateThread(function()
-    local pedModel = GetHashKey("s_m_m_doctor_01")
+Citizen.CreateThread(function()
+    local pedModel = Config.PedSettings.PedModel
     RequestModel(pedModel)
     while not HasModelLoaded(pedModel) do
         Wait(1)
     end
-    local ped = CreatePed(4, pedModel, Sharky.PedSettings.Coords.x, Sharky.PedSettings.Coords.y,
-        Sharky.PedSettings.Coords.z, Sharky.PedSettings.Coords.h, false, true)
+    local ped = CreatePed(4, pedModel, Config.PedSettings.Coords.x, Config.PedSettings.Coords.y, Config.PedSettings.Coords.z, Config.PedSettings.Coords.h, false, true)
     SetEntityAsMissionEntity(ped, true, true)
     FreezeEntityPosition(ped, true)
     SetEntityInvincible(ped, true)
     SetBlockingOfNonTemporaryEvents(ped, true)
     SetModelAsNoLongerNeeded(pedModel)
 
+    -- Separate thread for querying the number of online ambulances every 10 seconds
+    Citizen.CreateThread(function()
+        while true do
+            Wait(Config.Options.CheckInterval * 1000)
+            ESX.TriggerServerCallback('sharky_mentonpc:getOnlineAmbulance', function(onlineAmbulance)
+                if onlineAmbulance > 0 then
+                    canUse = false
+                else
+                    canUse = true
+                end
+            end)
+        end
+    end)
+
+    function checkExplosion()
+        for k, v in pairs(Explosion) do
+            if GetPedCauseOfDeath(PlayerPedId()) == v then
+                return true
+            end
+        end
+        return false
+    end
+
     while true do
-        Wait(0)
+        Wait(5)
         local coords = GetEntityCoords(ped)
+        local playerPed = PlayerPedId()
         local playerCoords = GetEntityCoords(PlayerPedId())
         local distance = GetDistanceBetweenCoords(coords, playerCoords, true)
         local playerHealth = GetEntityHealth(PlayerPedId())
-        if distance < 2 then
-            if canUse then
-                DrawText3D(coords + vec3(0, 0, 1), "Nyomd meg az ~g~E~s~ gombot a mentéshez")
-                if IsControlJustPressed(0, 38) then
-                    if playerHealth >= Sharky.Options.heal.minHealth then
-                        ESX.ShowNotification('Nem vagy beteg!')
-                        return
-                    end
+
+        local asd, headBone = GetPedLastDamageBone(playerPed)
+        if distance < 3 then
+            if IsControlJustPressed(0, 38) then
+                if asd == 1 and headBone == 31086 then
+                    ESX.ShowNotification('Nem tudlak gyógyítani, mert fejsérülést szenvedtél!')
+                elseif checkExplosion() == true then
+                    ESX.ShowNotification('Nem tudlak gyógyítani, mert felrobbantál!')
+                elseif not canUse then
+                    ESX.ShowNotification('Jelenleg van elérhető mentős!')
+                elseif playerHealth == 0 then
                     ESX.TriggerServerCallback('sharky_mentonpc:removeMoney', function()
-                        ESX.ShowNotification('Sikeresen meggyógyultál!')
+                        ESX.ShowNotification('Feltámadtál!')
+                        TriggerEvent('esx_ambulancejob:revive')
+                    end, Config.Options.RevivePrice)
+                elseif playerHealth > 0 and playerHealth < GetEntityMaxHealth(playerPed) then
+                    ESX.TriggerServerCallback('sharky_mentonpc:removeMoney', function()
+                        ESX.ShowNotification('Meggyógyultál!')
                         SetEntityHealth(PlayerPedId(), 200)
-                    end, 10000)
+                    end, Config.Options.HealPrice)
                 end
             else
-                DrawText3D(coords + vec3(0, 0, 1), "Bocsi, jelenleg van elérhetö kollégám!")
+                if not canUse then
+                    DrawText3D(coords + vec3(0, 0, 1), "~r~Ügyeletes \n Bocsi, jelenleg van elérhetö kollégám!")
+                elseif playerHealth > 0 then
+                    DrawText3D(coords + vec3(0, 0, 1), "~r~Ügyeletes \n ~s~Nyomd meg az ~g~E~w~ gombot az ellátás igényléséhez! ~g~10.000$")
+                elseif playerHealth == 0 then
+                    DrawText3D(coords + vec3(0, 0, 1), "~r~Ügyeletes \n ~s~Nyomd meg az ~g~E~w~ gombot az  újraélesztéshez! ~g~20.000$")
+                end
             end
+        elseif distance > 5 then
+            Wait(2000)
         end
     end
 end)
 
+
 function DrawText3D(coords, text)
-    local onScreen, _x, _y = World3dToScreen2d(coords.x, coords.y, coords.z)
-    local px, py, pz = table.unpack(GetGameplayCamCoord())
-    local dist = GetDistanceBetweenCoords(px, py, pz, coords.x, coords.y, coords.z, 1)
-    local scale = (1 / dist) * 2
-    local fov = (1 / GetGameplayCamFov()) * 100
-    local scale = scale * fov
-    if onScreen then
-        SetTextScale(0.0, 0.35)
-        SetTextFont(4)
-        SetTextProportional(1)
-        SetTextColour(255, 255, 255, 215)
-        SetTextDropshadow(0, 0, 0, 0, 255)
-        SetTextEdge(2, 0, 0, 0, 150)
-        SetTextDropShadow()
-        SetTextOutline()
-        SetTextEntry("STRING")
-        SetTextCentre(1)
-        AddTextComponentString(text)
-        DrawText(_x, _y)
-    end
+    SetDrawOrigin(coords)
+    SetTextScale(0.0, 0.4)
+    SetTextFont(4)
+    SetTextCentre(1)
+    SetTextOutline()
+    BeginTextCommandDisplayText("STRING")
+    AddTextComponentString(text)
+    EndTextCommandDisplayText(0, 0)
+    ClearDrawOrigin()
 end

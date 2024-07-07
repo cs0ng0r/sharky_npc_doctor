@@ -1,20 +1,16 @@
-Sharky = {}
+Config = {}
 
 
-Sharky.PedSettings = {
-    PedModel = GetHashKey("s_m_m_doctor_01"),
-    Coords = { x = 307.2420, y = -593.6313, z = 42.2840, h = 66.9500 },
-}
+Config.PedSettings = {
+    PedModel = GetHashKey("s_f_y_scrubs_01"),
+    Coords = { x = 308.4781, y = -595.2182, z = 42.2840, h = 66.9862 }, -- 308.4807, -592.8045, 43.2840, 22.6204
+} -- 308.4781, -595.2182, 43.2840, 66.9862
 
 
-Sharky.Options = {
-    CheckInterval = 5, -- Hány másodpercenként ellenőrizze, hogy van-e online mentőszolgálatos
-    ["heal"] = {
-        minHealth = 75,
-        price = 10000
-    },
-    ["revive"] = {
-        minHealth = 0,
-        price = 20000
-    }
+Config.Options = {
+    CheckInterval = 5,   -- Hány másodpercenként ellenőrizze, hogy van-e online mentőszolgálatos
+    RevivePrice = 20000, -- Feltámadás ára
+    HealPrice = 10000,   -- Gyógyulás ára
+    MaleHealth = 200,    -- Férfi játékosok alap élete
+    FemaleHealth = 175,  -- Női játékosok alap élete
 }
