@@ -100,8 +100,6 @@ end
 
 AddEventHandler('onResourceStop', function(resource)
     if resource == GetCurrentResourceName() then
-        local pedModel = Config.PedSettings.PedModel
-        local ped = GetHashKey(pedModel)
         if DoesEntityExist(ped) then
             DeleteEntity(ped)
         end
