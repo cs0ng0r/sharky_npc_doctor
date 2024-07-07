@@ -70,11 +70,11 @@ Citizen.CreateThread(function()
                 end
             else
                 if not canUse then
-                    DrawText3D(coords + vec3(0, 0, 1), "~r~Ügyeletes \n ~s~Bocsi, jelenleg van elérhetö kollégám!")
+                    DrawText3D(coords + vec3(0, 0, 1), Config.NPCText.npc_ems_online)
                 elseif playerHealth > 0 then
-                    DrawText3D(coords + vec3(0, 0, 1), "~r~Ügyeletes \n ~s~Nyomd meg az ~g~E~w~ gombot az ellátás igényléséhez! ~g~10.000$")
+                    DrawText3D(coords + vec3(0, 0, 1), Config.NPCText.npc_heal_txt)
                 elseif playerHealth == 0 then
-                    DrawText3D(coords + vec3(0, 0, 1), "~r~Ügyeletes \n ~s~Nyomd meg az ~g~E~w~ gombot az  újraélesztéshez! ~g~20.000$")
+                    DrawText3D(coords + vec3(0, 0, 1), Config.NPCText.npc_revive_txt)
                 end
             end
         elseif distance > 5 then

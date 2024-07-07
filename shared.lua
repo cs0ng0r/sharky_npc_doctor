@@ -14,3 +14,9 @@ Config.Options = {
     MaleHealth = 200,    -- Férfi játékosok alap élete
     FemaleHealth = 175,  -- Női játékosok alap élete
 }
+
+Config.NPCText = {
+    npc_ems_online =  "~r~Ügyeletes \n ~s~Bocsi, jelenleg van elérhetö kollégám!",
+    npc_heal_txt = "~r~Ügyeletes \n ~s~Nyomd meg az ~g~E~w~ gombot az ellátás igényléséhez! ~g~10.000$",
+    npc_revive_txt = "~r~Ügyeletes \n ~s~Nyomd meg az ~g~E~w~ gombot a feltámadáshoz! ~g~20.000$",
+}
