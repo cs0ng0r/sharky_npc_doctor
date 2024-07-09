@@ -26,7 +26,6 @@ Citizen.CreateThread(function()
     SetBlockingOfNonTemporaryEvents(ped, true)
     SetModelAsNoLongerNeeded(pedModel)
 
-    -- Separate thread for querying the number of online ambulances every 10 seconds
     Citizen.CreateThread(function()
         while true do
             Wait(Config.Options.CheckInterval * 1000)
