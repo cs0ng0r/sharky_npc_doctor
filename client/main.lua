@@ -2,6 +2,8 @@ local ESX       = exports.es_extended:getSharedObject()
 
 local canUse    = true
 
+local ems = 0
+
 local Explosion = { GetHashKey("weapon_explosion"), GetHashKey("WEAPON_PETROL_PUMP"), GetHashKey("WEAPON_PETROLCAN"),  GetHashKey("weapon_heli_crash") }
 
 function checkExplosion()
@@ -12,6 +14,11 @@ function checkExplosion()
     end
     return false
 end
+
+RegisterNetEvent('sharky_mentonpc:setOnlineAmbulance')
+AddEventHandler('sharky_mentonpc:setOnlineAmbulance', function(onlineAmbulance)
+    ems = onlineambulance
+end)
 
 Citizen.CreateThread(function()
     local pedModel = Config.PedSettings.PedModel
@@ -29,15 +36,13 @@ Citizen.CreateThread(function()
     Citizen.CreateThread(function()
         while true do
             Wait(Config.Options.CheckInterval * 1000)
-            ESX.TriggerServerCallback('sharky_mentonpc:getOnlineAmbulance', function(onlineAmbulance)
-                if onlineAmbulance > 0 then
+           
+                if ems > 0 then
                     canUse = false
                 else
                     canUse = true
                 end
-            end)
-        end
-    end)
+          
 
     while true do
         Wait(5)
