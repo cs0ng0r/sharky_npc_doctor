@@ -1,0 +1,11 @@
+function DrawText3D(coords, text)
+    SetDrawOrigin(coords)
+    SetTextScale(0.0, 0.4)
+    SetTextFont(4)
+    SetTextCentre(1)
+    SetTextOutline()
+    BeginTextCommandDisplayText("STRING")
+    AddTextComponentString(text)
+    EndTextCommandDisplayText(0, 0)
+    ClearDrawOrigin()
+end
