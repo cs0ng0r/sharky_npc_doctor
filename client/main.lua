@@ -1,7 +1,4 @@
 local ESX = exports.es_extended:getSharedObject()
-local onlineAmbulance = 0
-
-
 local canUse = true
 local ped = nil
 local Explosion = { GetHashKey("weapon_explosion"), GetHashKey("WEAPON_PETROL_PUMP"), GetHashKey("WEAPON_PETROLCAN"),
