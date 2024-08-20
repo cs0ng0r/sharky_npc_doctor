@@ -26,18 +26,15 @@ Citizen.CreateThread(function()
     SetBlockingOfNonTemporaryEvents(ped, true)
     SetModelAsNoLongerNeeded(pedModel)
 
-    Citizen.CreateThread(function()
-        while true do
-            Wait(Config.Options.CheckInterval * 1000)
-            ESX.TriggerServerCallback('sharky_mentonpc:getOnlineAmbulance', function(onlineAmbulance)
-                if onlineAmbulance > 0 then
-                    canUse = false
-                else
-                    canUse = true
-                end
-            end)
-        end
-    end)
+    RegisterNetEvent('sharky_mentonpc:regOnlineAmbulance', function(onlineAmbulance)
+    if onlineAmbulance > 0 then
+        deletePed()
+        canUse = false
+    else
+        spawnPed()
+        canUse = true
+    end
+end)
 
     while true do
         Wait(5)
