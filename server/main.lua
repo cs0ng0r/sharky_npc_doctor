@@ -1,7 +1,6 @@
 local ESX = exports.es_extended:getSharedObject()
-local onlineAmbulance = 0
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
 		local xPlayers = ESX.GetPlayers()
 		local onlineAmbulance = 0
