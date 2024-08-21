@@ -58,7 +58,7 @@ RegisterNetEvent('sharky_mentonpc:regOnlineAmbulance', function(onlineAmbulance)
     end
 end)
 
-Citizen.CreateThread(function()
+CreateThread(function()
     while true do
         Wait(5)
         if DoesEntityExist(ped) then
